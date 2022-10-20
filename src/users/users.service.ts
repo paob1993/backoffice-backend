@@ -45,7 +45,7 @@ export class UsersService {
 
   async findOneByEmail(email: string) {
     if (isEmail(email)) {
-      const user = this.userModel.findOne({ email: email }).select(['-password']).exec();
+      const user = this.userModel.findOne({ email: email }).exec();
       if (user) {
         return user;
       }
