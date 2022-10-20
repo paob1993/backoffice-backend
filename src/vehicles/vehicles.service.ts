@@ -27,11 +27,11 @@ export class VehiclesService {
   }
 
   async findAll(): Promise<Vehicle[]> {
-    return this.vehicleModel.find().populate('brand').populate('color').exec();
+    return this.vehicleModel.find().populate('brand').populate('color').select(['-image']).exec();
   }
 
   async findAllByUserId(authorization: string): Promise<Vehicle[]> {
-    return this.vehicleModel.find({ user: this.getUserFromToken(authorization) }).populate('brand').populate('color').exec();
+    return this.vehicleModel.find({ user: this.getUserFromToken(authorization) }).populate('brand').populate('color').select(['-image']).exec();
   }
 
   async findOne(id: string) {
@@ -49,7 +49,7 @@ export class VehiclesService {
     if (isMongoId(id)) {
       const vehicle = await this.vehicleModel.findById(id).exec();
       if (vehicle) {
-        return await this.vehicleModel.findByIdAndDelete(id);
+        return await this.vehicleModel.findByIdAndDelete(id).select(['-image']).exec();;
       };
       throw new HttpException({ error: MESSAGES.VEHICLE_NOT_EXIST }, HttpStatus.OK);
     }

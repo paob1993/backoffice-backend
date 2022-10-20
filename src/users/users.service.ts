@@ -33,8 +33,8 @@ export class UsersService {
   }
 
   async findOne(id: string) {
-    if (!isMongoId(id)) {
-      const user = this.userModel.findById(id);
+    if (isMongoId(id)) {
+      const user = this.userModel.findById({_id: id}).select(['-password']).exec();;
       if (user) {
         return user;
       }
@@ -45,7 +45,7 @@ export class UsersService {
 
   async findOneByEmail(email: string) {
     if (isEmail(email)) {
-      const user = this.userModel.findOne({ email: email });
+      const user = this.userModel.findOne({ email: email }).select(['-password']).exec();
       if (user) {
         return user;
       }
@@ -56,6 +56,6 @@ export class UsersService {
 
 
   async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
+    return this.userModel.find().select(['-password']).exec();
   }
 }
